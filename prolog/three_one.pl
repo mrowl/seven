@@ -10,7 +10,13 @@ range(N, Range) :- length(Range, N), range(N, Range, 0).
 my_domain([], _).
 my_domain([Head|Tail], Range) :- member(Head, Range), my_domain(Tail, Range).
 
-groups([], _, Cols, Rows, Squares, _).
+pprint_row([]).
+pprint_row([Head|Tail]) :- write(Head), write(' '), pprint_row(Tail).
+
+pprint_rows([]).
+pprint_rows([Head|Tail]) :- pprint_row(Head), write('\n'), pprint_rows(Tail).
+
+groups([], _, _, Rows, _, _) :- pprint_rows(Rows).
 groups([V|Tail], X, Cols, Rows, Squares, I) :- 
     Y is floor(sqrt(X)),
     range(X, Range),
