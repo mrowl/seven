@@ -20,8 +20,18 @@ class Board(val board_line:String) {
     
   def move(player: String, row: Int, col: Int) {
     assert (players.indexOf(player) >= 0)
-    flat = flat.updated((row * 3) + col, player)
-    build_matrices()
+    List(row, col).foreach( i => {
+      if ((0 to 2).indexOf(i) == -1) {
+        throw new IllegalArgumentException("Not valid talid placement: " + row.toString + "," + col.toString)
+      }
+    })
+    val flat_index = (row * 3) + col
+    if (flat(flat_index) == "_") {
+      flat = flat.updated(flat_index, player)
+      build_matrices()
+    } else {
+      throw new IllegalArgumentException("Illegal move: spot already taken")
+    }
   }
     
   def status(): Int = {
@@ -66,7 +76,12 @@ class Game() {
     val row = split(0)
     val col = split(1)
 
-    board.move(cur_player, row, col)
+    try {
+      board.move(cur_player, row, col)
+    } catch {
+      case e:IllegalArgumentException => println(e.toString())
+      play
+    }
     println("")
     board.print()
     println("")
