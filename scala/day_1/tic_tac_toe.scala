@@ -47,11 +47,10 @@ class Board(val board_line:String) {
   }
 
   def is_win(player:String): Boolean = {
-    def check_series(initial:Boolean, series:List[String]): Boolean = {
-      initial || (series.distinct.length == 1 && series(0) == player)
-    }
-    List(rows, cols, diags).foldLeft(false)((groups_stat: Boolean, group_mat: List[List[String]]) => {
-        groups_stat || group_mat.foldLeft(false)(check_series)
+    List(rows, cols, diags).exists(matrix => {
+      matrix.exists(row => {
+        row.forall(tile => tile == player)
+      })
     })
   }
 
